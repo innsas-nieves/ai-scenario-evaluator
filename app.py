@@ -1,6 +1,5 @@
 import streamlit as st
 import openai
-import os
 
 st.set_page_config(page_title="UNLV AI Scenario Evaluator", layout="centered")
 
@@ -33,45 +32,44 @@ if st.button("Evaluate Scenario"):
     elif not api_key:
         st.warning("Please enter your OpenAI API key.")
     else:
-                    try:
-                client = openai.OpenAI(api_key=api_key)
-                with st.spinner("Evaluating your scenario using the UNLV AI Framework..."):
-                    response = client.chat.completions.create(
-                        model="gpt-4",
-                        messages=[
-                            {
-                                "role": "system",
-                                "content": (
-                                    "You are an AI advisor helping UNLV faculty, staff, or administrators evaluate real-world AI scenarios using the UNLV AI Framework. "
-                                    "This framework emphasizes four domains: Technical Understanding, Evaluation and Critical Thinking, Practical Integration, and Ethical and Human-Centered Use. "
-                                    "For each scenario, return a structured analysis with these four sections:\n\n"
-                                    "### ✅ What the scenario gets right\n"
-                                    "### ⚠️ Areas to reconsider or clarify\n"
-                                    "### 📌 Suggestions based on the framework\n"
-                                    "### 💭 Questions to ask the team or individual"
-                                ),
-                            },
-                            {"role": "user", "content": scenario_input}
-                        ],
-                        temperature=0.6
-                    )
-                    result = response.choices[0].message.content
+        try:
+            client = openai.OpenAI(api_key=api_key)
+            with st.spinner("Evaluating your scenario using the UNLV AI Framework..."):
+                response = client.chat.completions.create(
+                    model="gpt-4",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": (
+                                "You are an AI advisor helping UNLV faculty, staff, or administrators evaluate real-world AI scenarios using the UNLV AI Framework. "
+                                "This framework emphasizes four domains: Technical Understanding, Evaluation and Critical Thinking, Practical Integration, and Ethical and Human-Centered Use. "
+                                "For each scenario, return a structured analysis with these four sections:\n\n"
+                                "### ✅ What the scenario gets right\n"
+                                "### ⚠️ Areas to reconsider or clarify\n"
+                                "### 📌 Suggestions based on the framework\n"
+                                "### 💭 Questions to ask the team or individual"
+                            ),
+                        },
+                        {"role": "user", "content": scenario_input}
+                    ],
+                    temperature=0.6
+                )
+                result = response.choices[0].message.content
 
-                    st.markdown("### 🧠 Framework-Based Feedback")
-                    st.markdown("---")
+                st.markdown("### 🧠 Framework-Based Feedback")
+                st.markdown("---")
 
-                    formatted_response = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
-                    st.markdown(formatted_response)
+                formatted_response = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
+                st.markdown(formatted_response)
 
-                    st.download_button(
-                        label="📥 Download Evaluation",
-                        data=result,
-                        file_name="scenario_evaluation.txt",
-                        mime="text/plain"
-                    )
-            except Exception as e:
-                st.error(f"Something went wrong: {e}")
-
+                st.download_button(
+                    label="📥 Download Evaluation",
+                    data=result,
+                    file_name="scenario_evaluation.txt",
+                    mime="text/plain"
+                )
+        except Exception as e:
+            st.error(f"Something went wrong: {e}")
 
 # Footer and Learn More
 st.markdown("---")
