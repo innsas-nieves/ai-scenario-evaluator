@@ -23,7 +23,7 @@ if st.button("Analyze Syllabus"):
             client = openai.OpenAI(api_key=api_key)
             with st.spinner("Analyzing your syllabus..."):
                 response = client.chat.completions.create(
-                    model="gpt-4",
+                    model="gpt-3.5-turbo",
                     messages=[
                         {
                             "role": "system",
