@@ -44,7 +44,11 @@ if st.button("Analyze Syllabus"):
                 result = response.choices[0].message.content
 
                 st.markdown("### 🧠 Framework-Based Feedback")
-                st.markdown(result)
+                st.markdown("---")
+
+                formatted_result = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
+                st.markdown(formatted_result)
+
 
                 st.download_button(
                     label="📥 Download Feedback",
