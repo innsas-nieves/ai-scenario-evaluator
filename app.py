@@ -59,7 +59,6 @@ if st.button("Evaluate Scenario"):
                 st.markdown("### 🧠 Framework-Based Feedback")
                 st.markdown(result)
 
-                # Export option
                 st.download_button(
                     label="📥 Download Evaluation",
                     data=result,
@@ -67,15 +66,16 @@ if st.button("Evaluate Scenario"):
                     mime="text/plain"
                 )
 
-      except Exception as e:
+        except Exception as e:
             st.error(f"Something went wrong: {e}")
 
-            # Divider and learn more
+# Footer and Learn More
 st.markdown("---")
 
 st.markdown("""
 📚 **Learn more about the UNLV AI Framework**  
 [View the full PDF](https://your-link-to-the-framework.pdf)
+
 ---
 
 🛠️ *Built by the UNLV Instructional Technology Team*  
