@@ -57,18 +57,18 @@ if st.button("Evaluate Scenario"):
                 )
                result = response.choices[0].message.content
 
-st.markdown("### 🧠 Framework-Based Feedback")
-st.markdown("---")
+                st.markdown("### 🧠 Framework-Based Feedback")
+                st.markdown("---")
 
-formatted_response = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
-st.markdown(formatted_response)
+                formatted_response = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
+                st.markdown(formatted_response)
 
-st.download_button(
-    label="📥 Download Evaluation",
-    data=result,
-    file_name="scenario_evaluation.txt",
-    mime="text/plain"
-)
+                st.download_button(
+                    label="📥 Download Evaluation",
+                    data=result,
+                    file_name="scenario_evaluation.txt",
+                    mime="text/plain"
+                )
 
         except Exception as e:
             st.error(f"Something went wrong: {e}")
