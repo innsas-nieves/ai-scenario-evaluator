@@ -57,8 +57,7 @@ if st.button("Evaluate Scenario"):
                 )
                 result = response.choices[0].message.content
                 st.markdown("### 🧠 Framework-Based Feedback")
-                st.markdown("### 🧠 Framework-Based Feedback")
-st.markdown("---")
+                st.markdown("---")
 
 # Add structured formatting around GPT response
 formatted_response = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
