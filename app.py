@@ -66,6 +66,18 @@ if st.button("Evaluate Scenario"):
                     file_name="scenario_evaluation.txt",
                     mime="text/plain"
                 )
+# Divider and learn more
+st.markdown("---")
+
+st.markdown("""
+📚 **Learn more about the UNLV AI Framework**  
+[View the full PDF](https://your-link-to-the-framework.pdf)
+
+---
+
+🛠️ *Built by the UNLV Instructional Technology Team*  
+Questions? Contact [alethea.inns@unlv.edu](mailto:alethea.inns@unlv.edu)
+""")
 
         except Exception as e:
             st.error(f"Something went wrong: {e}")
