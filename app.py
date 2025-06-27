@@ -1,8 +1,8 @@
-import streamlit as st
 st.set_page_config(
     page_title="UNLV AI Framework Tools",
+    layout="centered",
     page_icon="🎓",
-    layout="centered"
+    initial_sidebar_state="expanded"
 )
 st.markdown("<style>header {visibility: hidden;}</style>", unsafe_allow_html=True)
 st.title("🎓 UNLV AI Framework Interactive Tools")
