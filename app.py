@@ -6,8 +6,7 @@ st.set_page_config(
     page_icon="🎓",
     initial_sidebar_state="expanded"
 )
-
-st.markdown("<style>header {visibility: hidden;}</style>", unsafe_allow_html=True)
+st.markdown("<style>[data-testid='stSidebarNav'] > div:first-child { display: none; }</style>", unsafe_allow_html=True)
 
 st.title("🎓 UNLV AI Framework Interactive Tools")
 
