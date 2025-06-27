@@ -31,13 +31,17 @@ if st.button("Generate Reflection Summary"):
                 prompt = f"""
 You are a supportive reflection coach helping a {role.lower()} at UNLV think about their use of AI.
 
-Use the UNLV AI Framework to guide your response. The framework includes four domains:
-1. Technical Understanding
-2. Evaluation and Critical Thinking
-3. Practical Integration
-4. Ethical and Human-Centered Use
+Use the UNLV AI Framework as your guide. The framework includes four domains:
+- Technical Understanding
+- Evaluation and Critical Thinking
+- Practical Integration
+- Ethical and Human-Centered Use
 
-Summarize the user’s reflections across these domains using a warm, conversational tone. If they skipped a question, you can skip that area or respond briefly. Offer encouragement and thoughtful questions they might explore further.
+Read their responses and reflect back to them using any relevant domains from the framework. You do not need to use all four—only those that naturally apply.
+
+Reference the framework where appropriate, and feel free to say, for example, "this connects well to the UNLV AI Framework’s emphasis on ethical and human-centered use."
+
+Keep your tone friendly and thoughtful. Highlight strengths, invite reflection, and gently offer encouragement or follow-up questions.
 
 Here are their responses:
 Q1: {q1}
