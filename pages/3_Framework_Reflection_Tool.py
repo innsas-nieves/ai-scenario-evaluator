@@ -28,7 +28,21 @@ if st.button("Generate Reflection Summary"):
         try:
             client = openai.OpenAI(api_key=api_key)
             with st.spinner("Generating your framework-aligned reflection..."):
-                prompt = f"""
+               # Build dynamic reflection input based on what's answered
+reflections = []
+
+if q1.strip():
+    reflections.append(f"Q1 - AI in current/future work:\n{q1}")
+if q2.strip():
+    reflections.append(f"Q2 - What feels promising:\n{q2}")
+if q3.strip():
+    reflections.append(f"Q3 - Concerns or tensions:\n{q3}")
+if q4.strip():
+    reflections.append(f"Q4 - Values and priorities:\n{q4}")
+
+user_input = "\n\n".join(reflections)
+
+prompt = f"""
 You are a supportive reflection coach helping a {role.lower()} at UNLV think about their use of AI.
 
 Use the UNLV AI Framework as your guide. The framework includes four domains:
@@ -37,18 +51,16 @@ Use the UNLV AI Framework as your guide. The framework includes four domains:
 - Practical Integration
 - Ethical and Human-Centered Use
 
-Read their responses and reflect back to them using any relevant domains from the framework. You do not need to use all four—only those that naturally apply.
+Read their reflections and respond using only the framework domains that are relevant to what they shared. Do not mention or reflect on questions they left blank. You may skip a domain entirely if it is not relevant.
 
-Reference the framework where appropriate, and feel free to say, for example, "this connects well to the UNLV AI Framework’s emphasis on ethical and human-centered use."
+Reference the framework where appropriate, and use phrases like “this connects well to the UNLV AI Framework’s emphasis on…”
 
-Keep your tone friendly and thoughtful. Highlight strengths, invite reflection, and gently offer encouragement or follow-up questions.
+Keep your tone thoughtful, encouraging, and reflective—not evaluative.
 
-Here are their responses:
-Q1: {q1}
-Q2: {q2}
-Q3: {q3}
-Q4: {q4}
+Here are their reflections:
+{user_input}
 """
+
 
                 response = client.chat.completions.create(
                     model="gpt-3.5-turbo",
