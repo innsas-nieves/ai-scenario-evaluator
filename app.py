@@ -1,9 +1,10 @@
 import streamlit as st
 st.set_page_config(
     page_title="UNLV AI Framework Tools",
-    layout="centered",
-    page_icon="🎓"
+    page_icon="🎓",
+    layout="centered"
 )
+st.markdown("<style>header {visibility: hidden;}</style>", unsafe_allow_html=True)
 st.title("🎓 UNLV AI Framework Interactive Tools")
 st.write("""
 Welcome to the UNLV AI Framework app. This toolset helps UNLV instructors, administrators, and researchers explore and evaluate their use of AI using institutional guidance.
