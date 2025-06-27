@@ -1,6 +1,9 @@
+st.set_page_config(
+    page_title="UNLV AI Framework Tools",
+    layout="centered",
+    page_icon="🎓"
+)
 import streamlit as st
-
-st.set_page_config(page_title="UNLV AI Framework Tools", layout="centered")
 
 st.title("🎓 UNLV AI Framework Interactive Tools")
 st.write("""
