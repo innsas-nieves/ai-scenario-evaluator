@@ -28,33 +28,39 @@ if st.button("Generate Reflection Summary"):
         try:
             client = openai.OpenAI(api_key=api_key)
             with st.spinner("Generating your framework-aligned reflection..."):
-               # Build dynamic reflection input based on what's answered
-reflections = []
+                            # Build dynamic reflection input based on what's answered
+                reflections = []
 
-if q1.strip():
-    reflections.append(f"Q1 - AI in current/future work:\n{q1}")
-if q2.strip():
-    reflections.append(f"Q2 - What feels promising:\n{q2}")
-if q3.strip():
-    reflections.append(f"Q3 - Concerns or tensions:\n{q3}")
-if q4.strip():
-    reflections.append(f"Q4 - Values and priorities:\n{q4}")
+                if q1.strip():
+                    reflections.append(f"Q1 - AI in current or future work:\n{q1}")
+                if q2.strip():
+                    reflections.append(f"Q2 - What feels promising:\n{q2}")
+                if q3.strip():
+                    reflections.append(f"Q3 - Concerns or tensions:\n{q3}")
+                if q4.strip():
+                    reflections.append(f"Q4 - Values and priorities:\n{q4}")
 
-user_input = "\n\n".join(reflections)
+                user_input = "\n\n".join(reflections)
 
-# Build dynamic reflection input based on what's answered
-reflections = []
+                prompt = f"""
+You are a supportive reflection coach helping a {role.lower()} at UNLV think about their use of AI.
 
-if q1.strip():
-    reflections.append(f"Q1 - AI in current or future work:\n{q1}")
-if q2.strip():
-    reflections.append(f"Q2 - What feels promising:\n{q2}")
-if q3.strip():
-    reflections.append(f"Q3 - Concerns or tensions:\n{q3}")
-if q4.strip():
-    reflections.append(f"Q4 - Values and priorities:\n{q4}")
+Use the UNLV AI Framework as your guide. The framework includes four domains:
+- Technical Understanding
+- Evaluation and Critical Thinking
+- Practical Integration
+- Ethical and Human-Centered Use
 
-user_input = "\n\n".join(reflections)
+Read their reflections and respond using only the framework domains that are relevant to what they shared. Do not mention or reflect on questions they left blank. You may skip a domain entirely if it is not relevant.
+
+Reference the framework where appropriate, and use phrases like “this connects well to the UNLV AI Framework’s emphasis on…”
+
+Keep your tone thoughtful, encouraging, and reflective—not evaluative.
+
+Here are their reflections:
+{user_input}
+"""
+  
 
 prompt = f"""
 You are a supportive reflection coach helping a {role.lower()} at UNLV think about their use of AI.
