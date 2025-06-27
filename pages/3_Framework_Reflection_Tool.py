@@ -4,60 +4,68 @@ import openai
 st.set_page_config(page_title="Framework Reflection Tool", layout="centered")
 
 st.title("🧭 Framework Reflection Tool")
-st.write("Use this tool to reflect on how your current or planned use of AI aligns with the UNLV AI Framework.")
+st.write("Reflect on how your use of AI aligns with UNLV's values and priorities. You can answer any or all of the questions below.")
 
-# Role selector
+# Role selection
 role = st.selectbox("👤 What is your role?", ["Select...", "Instructor", "Administrator", "Researcher"])
 
-# Input prompts based on role
-if role != "Select...":
-    st.subheader("💬 Reflection Prompts")
+# Questions (any can be answered)
+q1 = st.text_area("1. What is one way AI is already showing up in your work, or could be in the future?", height=100)
+q2 = st.text_area("2. What feels promising or exciting about that possibility?", height=100)
+q3 = st.text_area("3. What concerns, questions, or tensions are on your mind?", height=100)
+q4 = st.text_area("4. What values or priorities do you want to keep in focus as you use AI?", height=100)
 
-    use_case = st.text_area("1. Describe how you're currently using or planning to use AI in your work:", height=150)
-    goals = st.text_area("2. What are your goals or motivations for using AI?", height=100)
-    concerns = st.text_area("3. What concerns do you have (e.g., ethics, effectiveness, bias, equity)?", height=100)
+# OpenAI API key
+api_key = st.text_input("🔑 Enter your OpenAI API key:", type="password")
 
-    api_key = st.text_input("🔑 Enter your OpenAI API key:", type="password")
+# Submit
+if st.button("Generate Reflection Summary"):
+    if not any([q1.strip(), q2.strip(), q3.strip(), q4.strip()]):
+        st.warning("You can answer as many or as few questions as you'd like, but at least one response is required.")
+    elif not api_key:
+        st.warning("Please enter your OpenAI API key.")
+    else:
+        try:
+            client = openai.OpenAI(api_key=api_key)
+            with st.spinner("Generating your framework-aligned reflection..."):
+                prompt = f"""
+You are a supportive reflection coach helping a {role.lower()} at UNLV think about their use of AI.
 
-    if st.button("Generate Reflection Summary"):
-        if not (use_case.strip() and goals.strip() and concerns.strip()):
-            st.warning("Please complete all three reflection prompts.")
-        elif not api_key:
-            st.warning("Please enter your OpenAI API key.")
-        else:
-            try:
-                client = openai.OpenAI(api_key=api_key)
-                with st.spinner("Generating your framework-aligned reflection..."):
-                    prompt = f"""
-You are an advisor helping a UNLV {role.lower()} reflect on their use of AI using the UNLV AI Framework. 
-The framework includes these domains: Technical Understanding, Evaluation and Critical Thinking, Practical Integration, and Ethical and Human-Centered Use.
+Use the UNLV AI Framework to guide your response. The framework includes four domains:
+1. Technical Understanding
+2. Evaluation and Critical Thinking
+3. Practical Integration
+4. Ethical and Human-Centered Use
 
-Here is their input:
-Use case: {use_case}
-Goals: {goals}
-Concerns: {concerns}
+Summarize the user’s reflections across these domains using a warm, conversational tone. If they skipped a question, you can skip that area or respond briefly. Offer encouragement and thoughtful questions they might explore further.
 
-Summarize their reflections across the four domains, pointing out strengths, risks, and opportunities to improve alignment. Be supportive and constructive.
+Here are their responses:
+Q1: {q1}
+Q2: {q2}
+Q3: {q3}
+Q4: {q4}
 """
 
-                    response = client.chat.completions.create(
-                        model="gpt-3.5-turbo",
-                        messages=[
-                            {"role": "system", "content": "You are a reflection coach using the UNLV AI Framework."},
-                            {"role": "user", "content": prompt}
-                        ],
-                        temperature=0.6
-                    )
-                    result = response.choices[0].message.content
+                response = client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a reflective coach using the UNLV AI Framework."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    temperature=0.6
+                )
+                result = response.choices[0].message.content
 
-                    st.markdown("### 🧠 Framework-Based Reflection Summary")
-                    st.markdown(result)
+                st.markdown("### 🧠 Framework-Based Reflection Summary")
+                st.markdown("---")
+                formatted_result = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
+                st.markdown(formatted_result)
 
-                    st.download_button(
-                        label="📥 Download Summary",
-                        data=result,
-                        file_name="framework_reflection.txt",
-                        mime="text/plain"
-                    )
-            except Exception as e:
-                st.error(f"Something went wrong: {e}")
+                st.download_button(
+                    label="📥 Download Summary",
+                    data=result,
+                    file_name="framework_reflection.txt",
+                    mime="text/plain"
+                )
+        except Exception as e:
+            st.error(f"Something went wrong: {e}")
