@@ -42,6 +42,20 @@ if q4.strip():
 
 user_input = "\n\n".join(reflections)
 
+# Build dynamic reflection input based on what's answered
+reflections = []
+
+if q1.strip():
+    reflections.append(f"Q1 - AI in current or future work:\n{q1}")
+if q2.strip():
+    reflections.append(f"Q2 - What feels promising:\n{q2}")
+if q3.strip():
+    reflections.append(f"Q3 - Concerns or tensions:\n{q3}")
+if q4.strip():
+    reflections.append(f"Q4 - Values and priorities:\n{q4}")
+
+user_input = "\n\n".join(reflections)
+
 prompt = f"""
 You are a supportive reflection coach helping a {role.lower()} at UNLV think about their use of AI.
 
@@ -60,28 +74,3 @@ Keep your tone thoughtful, encouraging, and reflective—not evaluative.
 Here are their reflections:
 {user_input}
 """
-
-
-                response = client.chat.completions.create(
-                    model="gpt-3.5-turbo",
-                    messages=[
-                        {"role": "system", "content": "You are a reflective coach using the UNLV AI Framework."},
-                        {"role": "user", "content": prompt}
-                    ],
-                    temperature=0.6
-                )
-                result = response.choices[0].message.content
-
-                st.markdown("### 🧠 Framework-Based Reflection Summary")
-                st.markdown("---")
-                formatted_result = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
-                st.markdown(formatted_result)
-
-                st.download_button(
-                    label="📥 Download Summary",
-                    data=result,
-                    file_name="framework_reflection.txt",
-                    mime="text/plain"
-                )
-        except Exception as e:
-            st.error(f"Something went wrong: {e}")
