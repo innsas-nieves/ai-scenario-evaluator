@@ -8,21 +8,16 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Rename sidebar label "app" to "Home"
+# Hide the default sidebar header ("app")
 st.markdown("""
     <style>
-        [data-testid="stSidebarNav"] ul li:first-child a span {
-            font-size: 0 !important;
-        }
-        [data-testid="stSidebarNav"] ul li:first-child a span:after {
-            content: "Home";
-            font-size: 1rem;
-            color: black;
+        [data-testid="stSidebarNav"] > div:first-child {
+            display: none;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Title and intro
+# Page content
 st.title("🎓 UNLV AI Framework Interactive Tools")
 
 st.write("""
@@ -31,7 +26,7 @@ Welcome to the UNLV AI Framework app. This toolset helps UNLV instructors, admin
 Choose a tool to get started:
 """)
 
-# Tools
+# Tool links and descriptions
 st.markdown("### 🧠 AI Scenario Evaluator")
 st.markdown("_Describe an AI use case and get feedback based on the framework’s four domains._")
 st.markdown("")
@@ -50,4 +45,3 @@ st.markdown("""
 📚 [View the full UNLV AI Framework PDF](https://your-link-to-the-framework.pdf)  
 📬 Questions? Contact [alethea.inns@unlv.edu](mailto:alethea.inns@unlv.edu)
 """)
-
