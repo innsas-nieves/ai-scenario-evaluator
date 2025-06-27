@@ -1,1 +1,15 @@
+[[pages]]
+path = "app.py"
+name = "Home"
 
+[[pages]]
+path = "pages/1_AI_Scenario_Evaluator.py"
+name = "AI Scenario Evaluator"
+
+[[pages]]
+path = "pages/2_Syllabus_Advisor.py"
+name = "Syllabus Advisor"
+
+[[pages]]
+path = "pages/3_Framework_Reflection_Tool.py"
+name = "Framework Reflection Tool"
