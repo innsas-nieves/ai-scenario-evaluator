@@ -9,7 +9,7 @@ st.write("Reflect on how your use of AI aligns with UNLV's values and priorities
 # Role selection
 role = st.selectbox("👤 What is your role?", ["Select...", "Instructor", "Administrator", "Researcher"])
 
-# Questions (any can be answered)
+# Reflection prompts
 q1 = st.text_area("1. What is one way AI is already showing up in your work, or could be in the future?", height=100)
 q2 = st.text_area("2. What feels promising or exciting about that possibility?", height=100)
 q3 = st.text_area("3. What concerns, questions, or tensions are on your mind?", height=100)
@@ -18,7 +18,7 @@ q4 = st.text_area("4. What values or priorities do you want to keep in focus as 
 # OpenAI API key
 api_key = st.text_input("🔑 Enter your OpenAI API key:", type="password")
 
-# Submit
+# Generate reflection
 if st.button("Generate Reflection Summary"):
     if not any([q1.strip(), q2.strip(), q3.strip(), q4.strip()]):
         st.warning("You can answer as many or as few questions as you'd like, but at least one response is required.")
@@ -28,7 +28,7 @@ if st.button("Generate Reflection Summary"):
         try:
             client = openai.OpenAI(api_key=api_key)
             with st.spinner("Generating your framework-aligned reflection..."):
-                            # Build dynamic reflection input based on what's answered
+                # Build reflection content dynamically
                 reflections = []
 
                 if q1.strip():
@@ -60,3 +60,29 @@ Keep your tone thoughtful, encouraging, and reflective—not evaluative.
 Here are their reflections:
 {user_input}
 """
+
+                response = client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=[
+                        {"role": "system", "content": "You are a reflective coach using the UNLV AI Framework."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    temperature=0.6
+                )
+                result = response.choices[0].message.content
+
+                st.markdown("### 🧠 Framework-Based Reflection Summary")
+                st.markdown("---")
+
+                formatted_result = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
+                st.markdown(formatted_result)
+
+                st.download_button(
+                    label="📥 Download Summary",
+                    data=result,
+                    file_name="framework_reflection.txt",
+                    mime="text/plain"
+                )
+
+        except Exception as e:
+            st.error(f"Something went wrong: {e}")
