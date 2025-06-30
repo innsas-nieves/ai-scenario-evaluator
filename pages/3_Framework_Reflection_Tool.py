@@ -4,7 +4,10 @@ import openai
 st.set_page_config(page_title="Framework Reflection Tool", layout="centered")
 
 st.title("🧭 Framework Reflection Tool")
-st.write("Reflect on how your use of AI aligns with UNLV's values and priorities. You can answer any or all of the questions below.")
+
+st.write("""
+Reflect on how your use of AI aligns with UNLV's values and priorities. You can answer any or all of the questions below. The tool will generate a reflection summary based on the UNLV AI Framework.
+""")
 
 # Role selection
 role = st.selectbox("👤 What is your role?", ["Select...", "Instructor", "Administrator", "Researcher"])
@@ -15,20 +18,15 @@ q2 = st.text_area("2. What feels promising or exciting about that possibility?",
 q3 = st.text_area("3. What concerns, questions, or tensions are on your mind?", height=100)
 q4 = st.text_area("4. What values or priorities do you want to keep in focus as you use AI?", height=100)
 
-# OpenAI API key
-api_key = st.text_input("🔑 Enter your OpenAI API key:", type="password")
-
-# Generate reflection
+# Submit button
 if st.button("Generate Reflection Summary"):
     if not any([q1.strip(), q2.strip(), q3.strip(), q4.strip()]):
         st.warning("You can answer as many or as few questions as you'd like, but at least one response is required.")
-    elif not api_key:
-        st.warning("Please enter your OpenAI API key.")
     else:
         try:
-            client = openai.OpenAI(api_key=api_key)
+            client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
             with st.spinner("Generating your framework-aligned reflection..."):
-                # Build reflection content dynamically
                 reflections = []
 
                 if q1.strip():
@@ -69,6 +67,7 @@ Here are their reflections:
                     ],
                     temperature=0.6
                 )
+
                 result = response.choices[0].message.content
 
                 st.markdown("### 🧠 Framework-Based Reflection Summary")
