@@ -1,10 +1,18 @@
 import streamlit as st
 import openai
 
-st.set_page_config(page_title="UNLV AI Scenario Evaluator", layout="centered")
+st.set_page_config(page_title="AI Scenario Evaluator", layout="centered")
 
-st.title("🤖 UNLV AI Scenario Evaluator")
-st.write("Use this tool to describe a scenario involving AI (e.g., student use, hiring process, faculty workflow). It will return recommendations based on the UNLV AI Framework.")
+st.title("🧠 AI Scenario Evaluator")
+
+st.write("""
+Use this tool to describe a real or hypothetical AI-related scenario. The evaluator will return GPT-powered feedback based on the UNLV AI Framework, highlighting strengths, risks, and areas to strengthen alignment.
+
+You can describe situations like:
+- A student using ChatGPT to generate a paper
+- An administrator considering AI for hiring or communication
+- A researcher summarizing literature with AI tools
+""")
 
 # Example scenarios
 example_scenarios = {
@@ -15,52 +23,53 @@ example_scenarios = {
     "A researcher uses AI to summarize article PDFs": "A faculty member uploads PDFs to a tool that summarizes literature and generates citations for grant proposals."
 }
 
-# Scenario selection
 selected_example = st.selectbox("🔍 Or choose a prewritten scenario to try:", list(example_scenarios.keys()))
 scenario_text = example_scenarios[selected_example]
 
-# User input
 scenario_input = st.text_area("✏️ Describe your scenario involving AI use:", value=scenario_text, height=200)
 
-# OpenAI API key
-api_key = st.text_input("🔑 Enter your OpenAI API key:", type="password")
-
-# GPT call
+# Submit
 if st.button("Evaluate Scenario"):
     if not scenario_input.strip():
         st.warning("Please describe a scenario.")
-    elif not api_key:
-        st.warning("Please enter your OpenAI API key.")
     else:
         try:
-            client = openai.OpenAI(api_key=api_key)
-            with st.spinner("Evaluating your scenario using the UNLV AI Framework..."):
+            client = openai.OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+            with st.spinner("Analyzing your scenario using the UNLV AI Framework..."):
+                prompt = f"""
+You are an AI advisor helping a member of the UNLV community evaluate their use of AI. Use the UNLV AI Framework as your guide, which includes these domains:
+- Technical Understanding
+- Evaluation and Critical Thinking
+- Practical Integration
+- Ethical and Human-Centered Use
+
+Read the scenario and offer feedback using any domains that apply. Do not include domains that are not relevant. Your response should be structured with:
+### ✅ What the scenario gets right
+### ⚠️ Areas to reconsider or clarify
+### 📌 Suggestions based on the framework
+### 💭 Questions to ask the team or individual
+
+Here is the scenario:
+{scenario_input}
+"""
+
                 response = client.chat.completions.create(
-                    model="gpt-4",
+                    model="gpt-3.5-turbo",
                     messages=[
-                        {
-                            "role": "system",
-                            "content": (
-                                "You are an AI advisor helping UNLV faculty, staff, or administrators evaluate real-world AI scenarios using the UNLV AI Framework. "
-                                "This framework emphasizes four domains: Technical Understanding, Evaluation and Critical Thinking, Practical Integration, and Ethical and Human-Centered Use. "
-                                "For each scenario, return a structured analysis with these four sections:\n\n"
-                                "### ✅ What the scenario gets right\n"
-                                "### ⚠️ Areas to reconsider or clarify\n"
-                                "### 📌 Suggestions based on the framework\n"
-                                "### 💭 Questions to ask the team or individual"
-                            ),
-                        },
-                        {"role": "user", "content": scenario_input}
+                        {"role": "system", "content": "You are a university AI advisor using the UNLV AI Framework."},
+                        {"role": "user", "content": prompt}
                     ],
                     temperature=0.6
                 )
+
                 result = response.choices[0].message.content
 
                 st.markdown("### 🧠 Framework-Based Feedback")
                 st.markdown("---")
 
-                formatted_response = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
-                st.markdown(formatted_response)
+                formatted_result = result.replace("###", "####").replace("\n\n", "\n\n---\n\n")
+                st.markdown(formatted_result)
 
                 st.download_button(
                     label="📥 Download Evaluation",
@@ -68,18 +77,6 @@ if st.button("Evaluate Scenario"):
                     file_name="scenario_evaluation.txt",
                     mime="text/plain"
                 )
+
         except Exception as e:
             st.error(f"Something went wrong: {e}")
-
-# Footer and Learn More
-st.markdown("---")
-
-st.markdown("""
-📚 **Learn more about the UNLV AI Framework**  
-[View the full PDF](https://your-link-to-the-framework.pdf)
-
----
-
-🛠️ *Built by the UNLV Instructional Technology Team*  
-Questions? Contact [alethea.inns@unlv.edu](mailto:alethea.inns@unlv.edu)
-""")
